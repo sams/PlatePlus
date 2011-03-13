@@ -10,7 +10,7 @@ a range of sweet features to projects baked with BakingPlate.
 `var $helpers = array('PlatePlus.Plate')`;
 
 Its a helper that adds a number of features to apps and leaves 
-your layouts clean & basic.
+your layouts clean & basic. The helper that unifies apps baked with [BakingPlate](http://github.com)
 
 It *will*  wrap in support for other cake plugins (Media, Asset Compress).
 It currently wraps in support for the HtmlPlus Helper - which is optional 
@@ -46,6 +46,9 @@ from within the *view*.  Also it can be used to construct markup to be passed to
 calls.
 
 
+for more information see the test cases for the helper in question
+
+
 ## Using the Plus Helpers
 
 `var $helpers = array('Analogue.Analogue' => array('PlatePlus.HtmlPlus' => 'Html', 'PlatePlus.FormPlus' => 'Form'))`;
@@ -61,6 +64,26 @@ this will output  a section (falling back to div with 'section' class for non (x
 @todo video, audio, source, mark, time, sectionize
 
 ### Form Plus
-@todo
+
+not there yet
+
+## Todo
+
+* i18n stuff
+* Plate create method for showing basic vars in nice format when admin (make it update via ajax)
+* Plate resolve inconsistencies with JS Paths to modernizr
+* Plate resolve inconsistencies with JS Paths in fallback libs
+* Plate resolve inconsistencies with syntax of html4.5 vs html5 fallback lib
+* HtmlPlus Microformats
+* HtmlPlus Media Plugin support
+* HtmlPlus Swf Engine support (swf management & swfobject app intergration)
+* HtmlPlus Asset Compress (possible other asset plugins to)
+* Html5
+    * HtmlPlus Video, Audio & Source
+      video for all ideas
+    * HtmlPlus Time
+    * fallback content improvements
+    * fallback scripts
+* FormPlus Helper
 
 ### Made for BakingPlate (but can be used with cake apps in general).
