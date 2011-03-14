@@ -9,8 +9,7 @@
  * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', array('Helper', 'AppHelper', 'ClassRegistry', 'Controller', 'Model', 'Folder'));
-App::import('Helper', array('HtmlPlus', 'Html', 'FormPlus', 'Form', 'Plate'));
-
+App::import('Helper', array('PlatePlus.HtmlPlus', 'Html', 'PlatePlus.FormPlus', 'Form', 'PlatePlus.Plate'));
 
 if (!defined('FULL_BASE_URL')) {
 	define('FULL_BASE_URL', 'http://cakephp.org');
