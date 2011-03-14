@@ -693,12 +693,10 @@ class HtmlPlusHelper extends AppHelper {
 		$this->__includedScripts[$url] = true;
 		$prefix = '';
 		if (strpos($url, '://') === false) {
-			// I realize this is a dodgy twist to get the http(s)? friendly url into cake
-			if (substr($url, 0, 2) == '//') {
-				$prefix = '/';
-			}
-			if ($url[0] !== '/') {
+			if (substr($url, 0, 2) !== '//' && $url[0] !== '/') {
 				$url = JS_URL . $url;
+			} elseif(substr($url, 0, 2) == '//') {
+			    $prefix = '/';
 			}
 			if (strpos($url, '?') === false && substr($url, -3) !== '.js') {
 				$url .= '.js';
