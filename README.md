@@ -85,5 +85,9 @@ not there yet
     * fallback content improvements
     * fallback scripts
 * FormPlus Helper
+* Plugin elements (this helper set has been converted to a plugin - you may have to copy the plugins elements to app elements)
+    * make the presence of elements in app override those within this helper
+* Plate has only helpers - comp, behaviours maybe later
+* Add php flushing to improve performance before body and end of page (might affect what StaticCache saves to webroot/cache/)
 
 ### Made for BakingPlate (but can be used with cake apps in general).
