@@ -1,8 +1,15 @@
 <?php
 /* HtmlPlus Test cases generated on: 2011-01-11 02:01:20 : 1294713320 ~ altered test of core test for html helper */
 /**
- * HtmlHelperTest file
+ * HtmlPlusHelperTest file
  *
+ * @author	  Sam Sherlock <hell@samsherlock.com>
+ * @package       plate_plus
+ * @subpackage    plate_plus.tests.cases.libs.view.helpers
+ * @since         v 0.0.1a
+ * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ *
+ * based on helper test by Cake Software Foundation
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <http://book.cakephp.org/view/1196/Testing>
@@ -10,13 +17,6 @@
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2006-2010, Cake Software Foundation, Inc.
- * @link          http://book.cakephp.org/view/1196/Testing CakePHP(tm) Tests
- * @package       cake
- * @subpackage    cake.tests.cases.libs.view.helpers
- * @since         CakePHP(tm) v 1.2.0.4206
- * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 App::import('Core', array('Helper', 'AppHelper', 'ClassRegistry', 'Controller', 'Model', 'Folder'));
 App::import('Helper', array('HtmlPlus', 'FormPlus'));
@@ -47,26 +47,27 @@ if (!defined('THEME')) {
 /**
  * TheHtmlTestController class
  *
- * @package       cake
- * @subpackage    cake.tests.cases.libs.view.helpers
+ * @package       plate_plus
+ * @subpackage    plate_plus.tests.cases.libs.view.helpers
  */
-class TheHtmlTestController extends Controller {
-
-/**
- * name property
- *
- * @var string 'TheTest'
- * @access public
- */
-	var $name = 'TheTest';
-
-/**
- * uses property
- *
- * @var mixed null
- * @access public
- */
-	var $uses = null;
+if(!class_exists('TheHtmlTestController')) {
+	class TheHtmlTestController extends Controller {
+		/**
+		 * name property
+		 *
+		 * @var string 'TheTest'
+		 * @access public
+		 */
+		var $name = 'TheTest';
+	
+		/**
+		 * uses property
+		 *
+		 * @var mixed null
+		 * @access public
+		 */
+		var $uses = null;
+	}
 }
 
 Mock::generate('View', 'HtmlHelperMockView');
