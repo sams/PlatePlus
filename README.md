@@ -1,4 +1,4 @@
-# Plate Plus Plugin
+# Plate Plus Plugin - 0.1a
 
 Currently this plugin contains helpers that can be used to apply 
 a range of sweet features to projects baked with BakingPlate.
