@@ -139,39 +139,42 @@ class PlateHelperTestCase extends CakeTestCase {
 	 * @param void
 	 */
 	function testJsLibDefault() {
-	    Configure::write('Site.JsLib', array(
-		    'cdn' => 'Google',
-		    'name' => 'jQuery',
-		    'version' => '1.5.1',
-		    'compressed' => true
-		)
-	    );
-	    
-	    $expected = array(
-		'script' => array('src' => '//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js')
-	    );
-	    
-	    $result = $this->Plate->jsLib(array('fallback' => false));
-	    echo "<pre>".htmlspecialchars($result)."</pre>";
-	    $this->assertTags($result, $expected, false, 'JS Lib Test Using jquery default 2.2 from google its minified');
-	    
-	    $settings = array(
-		    'cdn' => 'Google',
-		    'name' => 'jQuery',
-		    'version' => '1.3.2',
-		    'compressed' => true,
-		    'fallback' => true
+		$this->Html->webroot = '/';
+		Configure::write('Site.JsLib', array(
+			'cdn' => 'Google',
+			'name' => 'jQuery',
+			'version' => '1.5.1',
+			'compressed' => true
+		    )
 		);
-	    
-	    $expected = '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>' . 
-		'!window.jQuery && document.write(unescape(\'%3Cscript src="/js/libs/jquery-1.3.2.min.js"%3E%3C/script%3E\'))</script>';
-	    $result = $this->Plate->jsLib($settings);
-	    echo "<pre>".htmlspecialchars($result)."</pre>";
-	    echo "<pre>".htmlspecialchars($expected)."</pre>";
-	    $this->assertEqual($result, $expected, 'JS Lib Test Using jquery default 1.3.2 from google its minified');
+		
+		$expected = array(
+		    'script' => array('src' => '//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js')
+		);
+		
+		$result = $this->Plate->jsLib(array('fallback' => false));
+		echo "<pre>".htmlspecialchars($result)."</pre>";
+		$this->assertTags($result, $expected, false, 'JS Lib Test Using jquery default 2.2 from google its minified');
+		
+		$settings = array(
+			'cdn' => 'Google',
+			'name' => 'jQuery',
+			'version' => '1.3.2',
+			'compressed' => true,
+			'fallback' => true,
+			'html5' => true
+		    );
+
+		$expected = '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>' . 
+		    '<script>!window.jQuery && document.write(unescape(\'%3Cscript src="/js/libs/jquery-1.3.2.min.js"%3E%3C/script%3E\'))</script>';
+		$result = $this->Plate->jsLib($settings);
+		echo "<pre>".htmlspecialchars($result)."</pre>";
+		echo "<pre>".htmlspecialchars($expected)."</pre>";
+		$this->assertEqual($result, $expected, 'JS Lib Test Using jquery default 1.3.2 from google its minified');
 	}
 
 	function testJsLibVariousAndVersions() {
+		$this->Html->webroot = '/';
 		Configure::write('Site.jsLib.jQuery', array(
 		    'cdn' => 'Google',
 		    'lib' => 'jquery',
@@ -267,11 +270,12 @@ class PlateHelperTestCase extends CakeTestCase {
 	}
 
 	function testProfiling() {
+		$this->Html->webroot = '/';
 		Configure::write('Site.yahooProfiler', '2.8.2r1');
 
 		$expected = array(
-		    'script' => array('src' => 'js/profiling/yahoo-profiling.min.js'),
-		    'script' => array('src' => 'js/profiling/config.js'),
+		    'script' => array('src' => '/js/profiling/yahoo-profiling.min.js'),
+		    'script' => array('src' => '/js/profiling/config.js'),
 		);
 
 		$result = $this->Plate->profiling();
@@ -333,14 +337,14 @@ GA2;
 	function testModernizr() {
 		Configure::write('Site.ModernizrBuild', '1.7');
 		$expected = array(
-		    'script' => array('src' => 'js/libs/modernizr-1.7.min.js')
+		    'script' => array('src' => '/js/libs/modernizr-1.7.min.js')
 		);
 		$result = $this->Plate->modernizr();
 		echo "<pre>".htmlspecialchars($result)."</pre>";
 		$this->assertTags($result, $expected, false,  'Html5 Modernizr using default build');
 		
 		$expected = array(
-		    'script' => array('src' => 'js/libs/modernizr2-yepnope.min.js')
+		    'script' => array('src' => '/js/libs/modernizr2-yepnope.min.js')
 		);
 		$result = $this->Plate->modernizr(array('build' => 'modernizr2-yepnope'));
 		echo "<pre>".htmlspecialchars($result)."</pre>";
@@ -348,7 +352,7 @@ GA2;
 		
 		Configure::write('Site.ModernizrBuild', '2-yepnope');
 		$expected = array(
-		    'script' => array('src' => 'js/libs/modernizr-2-yepnope.js')
+		    'script' => array('src' => '/js/libs/modernizr-2-yepnope.js')
 		);
 		$result = $this->Plate->modernizr(array('min' => false));
 		echo "<pre>".htmlspecialchars($result)."</pre>";
