@@ -696,7 +696,7 @@ class HtmlPlusHelper extends AppHelper {
 			if (substr($url, 0, 2) !== '//' && $url[0] !== '/') {
 				$url = JS_URL . $url;
 			} elseif(substr($url, 0, 2) == '//') {
-			    $prefix = '/';
+			    //$prefix = '/';
 			}
 			if (strpos($url, '?') === false && substr($url, -3) !== '.js') {
 				$url .= '.js';
