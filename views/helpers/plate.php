@@ -13,7 +13,13 @@
 class PlateHelper extends AppHelper {
 	var $helpers = array('Html', 'Form');
 	var $_currentView;
-	var $modernizrBuild = 'modernizr-1.7';
+ 	var $modernizrBuild =  array(
+		    'cdn' => 'default',
+		    'lib' => 'modernizr',
+		    'name' => 'modernizr',
+		    'version' => '1.7',
+		    'compressed' => true,
+		    'fallback' => false);
 	
 	/**
 	 * defaultJsLib
@@ -24,7 +30,8 @@ class PlateHelper extends AppHelper {
 		'swfobject' => 'SWFObject',
 		'prototype' => 'Prototype',
 		'dojo' => 'dojo',
-		'mootools' => 'MooTools'
+		'mootools' => 'MooTools',
+		'modernizr' => 'modernizr'
 		);
 	
 	/**
@@ -47,8 +54,8 @@ class PlateHelper extends AppHelper {
 	 * @var array named content deployment networks
 	 */
 	private $_jsLibFallback = array(
-		'window.:name || document.write(\'<script src="/js/libs/:lib-:version:min.js">\x3C/script>\')',
-		'!window.:name && document.write(unescape(\'%3Cscript src="/js/libs/:lib-:version:min.js"%3E%3C/script%3E\'))'
+		'window.:name || document.write(\'<script src=":path/:lib-:version:min.js">\x3C/script>\')',
+		'!window.:name && document.write(unescape(\'%3Cscript src=":path/:lib-:version:min.js"%3E%3C/script%3E\'))'
 		);
 	
 	/**
@@ -58,7 +65,8 @@ class PlateHelper extends AppHelper {
 	private $_cdns = array(
 		'Google' => '//ajax.googleapis.com/ajax/libs/:lib/:version/:lib:min.js',
 		'Microsoft' => 'http://ajax.aspnetcdn.com/ajax/:name/:lib-:version:min.js',
-		'jQuery' => 'http://code.jquery.com/jquery-:version:min.js'
+		'jQuery' => 'http://code.jquery.com/jquery-:version:min.js',
+		'default' => '/:theme:type/:lib-:version:min.:type'
 	);
 	
 	/**
@@ -83,6 +91,8 @@ class PlateHelper extends AppHelper {
 		$html5 = ($options['html5'] || $this->Html->getType('short') == 'html5') ? 1 : 0;
 		if($options['name'] == 'SWFObject') $options['name'] = $options['lib'];
 		$fallback = $this->_jsLibFallback[$html5];
+		$options['path'] = $this->webroot('/') . ($this->theme ? 'theme/' . $this->theme . '/' : '') . 'js/libs';
+		//debug($options['path']);
 		foreach($options as $key => $value) {
 			$fallback = str_replace(':'.$key, $value, $fallback);
 		} 
@@ -95,8 +105,10 @@ class PlateHelper extends AppHelper {
 	 * @param options array of options eg host = google, lib = jquery, version = null, compressed = true
 	 */
 	function cdnLib($options) {
-		$cdn = $this->_cdns[$options['cdn']];
+		$cdn = (array_key_exists('cdn', $options) && $options['cdn']) ? $options['cdn'] : 'default';
+		$cdn = (array_key_exists($cdn, $this->_cdns)) ? $this->_cdns[$cdn] : $this->_cdns['default'];
 		foreach($options as $key => $value) {
+		  $value = ($key == 'theme' && $options['cdn'] == 'default' && !empty($value))  ? "$value/": $value;
 			$cdn = str_replace(':'.$key, $value, $cdn);
 		} 
 	    return $cdn;
@@ -110,17 +122,38 @@ class PlateHelper extends AppHelper {
 	 * @param array of javascrip library options such as cdn, libname, version, minification
 	 */
 	public function jsLib($options = array()) {
-		$options = is_string($options) ? Configure::read('Site.jsLib.' . $options) : $options;
-		$options = is_array(($options)) ? array_merge($this->_defaultJsLib, $options) : $this->_defaultJsLib;
+	  
+	  $options['type']= 'js';
+	  $options['theme']= $this->theme ? $this->theme : false;
+	  
+		if(isset($options['lib']) && $options['lib'] == 'modernizr') {
+			$options['lib'] = 'libs/' . $options['lib'];
+			//return 'modernizr';
+		}
+		if(!is_array($options)) {
+			$options = is_string($options) ? Configure::read('PlatePlus.JsLib.' . $options) : $this->_defaultJsLib;
+		}
+		
+		$options = is_array($options) ? array_merge($this->_defaultJsLib, $options) : $this->_defaultJsLib;
 		
 		$options['html5'] = ($this->Html->getType('short') == 'html5') ? true : false;
 		
-		if(!isset($options['name'])) {
+		//print $options['lib'];
+		
+		if(!isset($options['name']) && isset($options['lib'])) {
 			$options['name'] = $this->libs[$options['lib']];
 		}
 		
-		if(is_null($options['version'])) {
-			$options['version'] = Configure::read('Site.jsLib.' . $options['name'] . '.version');
+		if(!isset($options['cdn'])) {
+			$options['cdn'] = 'default';
+		}
+		
+		if(!isset($options['fallback'])) {
+			$options['fallback'] = false;
+		}
+		
+		if(!isset($options['version']) || is_null($options['version'])) {
+			$options['version'] = Configure::read('PlatePlus.JsLib.' . (!empty($options['name']) ? $options['name'] : 'default') . '.version');
 		}
 
 		$options['min'] = (!isset($options['compressed']) ||$options['compressed'] === true) ? '.min' : '';
@@ -153,7 +186,7 @@ class PlateHelper extends AppHelper {
 	 * @param void
 	 */   
 	public function profiling() {
-		if(Configure::read('Site.yahooProfiler'))	{
+		if(Configure::read('PlatePlus.YahooProfiler.active'))	{
 		    return $this->Html->script(array('profiling/yahoo-profiling.min', 'profiling/config'));
 		}
 	}
@@ -281,13 +314,7 @@ class PlateHelper extends AppHelper {
 	 * @author Sam Sherlock
 	 */
 	public function modernizr($options = false) {
-		$defaults = array(
-			'min' => '.min',
-			'build' => $this->modernizrBuild
-		);
-		$options = is_array($options) ? array_merge($defaults, $options) : $defaults;
-		$min = $options['min'] === false ? '' : '.min';
-	    return $this->Html->script('libs/' . $options['build'] . $min);
+	    return $this->jsLib(array_merge($this->modernizrBuild, Configure::read('PlatePlus.JsLib.modernizr')));
 	}
 
 	/**
