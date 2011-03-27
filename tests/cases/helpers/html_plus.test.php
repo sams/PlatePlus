@@ -19,7 +19,7 @@
  *  Redistributions of files must retain the above copyright notice.
  */
 App::import('Core', array('Helper', 'AppHelper', 'ClassRegistry', 'Controller', 'Model', 'Folder'));
-App::import('Helper', array('HtmlPlus', 'FormPlus'));
+App::import('Helper', array('PlatePlus.HtmlPlus', 'PlatePlus.FormPlus'));
 
 if (!defined('FULL_BASE_URL')) {
 	define('FULL_BASE_URL', 'http://cakephp.org');
