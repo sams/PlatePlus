@@ -16,6 +16,7 @@ class PlateHelper extends AppHelper {
  	var $modernizrBuild =  array(
 		    'cdn' => 'default',
 		    'lib' => 'modernizr',
+		    'theme' => false,
 		    'name' => 'modernizr',
 		    'version' => '1.7',
 		    'compressed' => true,
@@ -66,7 +67,7 @@ class PlateHelper extends AppHelper {
 		'Google' => '//ajax.googleapis.com/ajax/libs/:lib/:version/:lib:min.js',
 		'Microsoft' => 'http://ajax.aspnetcdn.com/ajax/:name/:lib-:version:min.js',
 		'jQuery' => 'http://code.jquery.com/jquery-:version:min.js',
-		'default' => '/:theme:type/:lib-:version:min.:type'
+		'default' => '/:theme/:type/:lib-:version:min.:type'
 	);
 	
 	/**
@@ -108,7 +109,7 @@ class PlateHelper extends AppHelper {
 		$cdn = (array_key_exists('cdn', $options) && $options['cdn']) ? $options['cdn'] : 'default';
 		$cdn = (array_key_exists($cdn, $this->_cdns)) ? $this->_cdns[$cdn] : $this->_cdns['default'];
 		foreach($options as $key => $value) {
-		  $value = ($key == 'theme' && $options['cdn'] == 'default' && !empty($value))  ? "$value/": $value;
+		  $value = ($key == 'theme' && $options['cdn'] == 'default')  ? "$value/": "$value";
 			$cdn = str_replace(':'.$key, $value, $cdn);
 		} 
 	    return $cdn;
@@ -127,7 +128,7 @@ class PlateHelper extends AppHelper {
 	  $options['theme']= $this->theme ? $this->theme : false;
 	  
 		if(isset($options['lib']) && $options['lib'] == 'modernizr') {
-			$options['lib'] = 'libs/' . $options['lib'];
+			$options['lib'] = '/libs/' . $options['lib'];
 			//return 'modernizr';
 		}
 		if(!is_array($options)) {
@@ -253,9 +254,17 @@ class PlateHelper extends AppHelper {
 	 */
 	
 	public function css($style = 'style', $options = array()) {
-		$style = '<link rel="stylesheet" href="/css/style.css">';
-		$handheld = '<link rel="stylesheet" media="handheld" href="/css/handheld.css">';
-	    return $style.$handheld;
+		if(is_string($style) && $style == 'handheld' && !isset($options['media'])) {
+			$options['media'] = 'handheld';
+		}
+	    return $this->Html->css($style, null, $options);
+	}
+	
+	public function js($name, $scripts = array('plugins', 'scrips'), $options = array()) {
+		if(is_string($scripts) && $scripts == 'handheld') {
+			//$options['media'] = 'handheld';
+		}
+	    return $this->Html->script($scripts);
 	}
 	
 	/**
