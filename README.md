@@ -8,3 +8,5 @@ This plugin is an optional addition to BakingPlate projects
 
 This plugin is not a BakingPlate core module but requires  the core set 
 and some other plugins TBC
+
+*THIS IS A WORK IN PROGRESS!*

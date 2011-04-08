@@ -9,7 +9,6 @@
  * @link http://book.cakephp.org/view/1434/HTML
  */
 
-App::import('Helper', 'BakingPlate.Plate');
-
+App::import('helper', 'BakingPlate.Plate');
 class PlatePlusHelper extends PlateHelper {
 }
